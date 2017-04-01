@@ -34,37 +34,50 @@ public class DepositClient {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to Client side");
-        /*MessageData messages = new MessageData();
-        Deposit d1 = new Deposit("Private bank", "Ukrain", 4, "Stas", 1231231412, 12500f, 1.5f, "2 years");
-        messages.setMessage("ssad");
-        messages.deposit = d1;*/
-        MessageData messages = new MessageData("something",null);
+        MessageData messages = new MessageData();
         Socket fromserver =  new Socket("127.0.0.1", 1234);
-        
-        ObjectOutputStream clientOutputStream = new ObjectOutputStream(fromserver.getOutputStream());
-        ObjectInputStream clientInputStream = new ObjectInputStream(fromserver.getInputStream());
-        
-         Scanner in = new Scanner(System.in);
-        
-         while (true) {
-            messages.setMessage(in.nextLine());   
-            clientOutputStream.writeObject(messages);
-            if(messages.message.equalsIgnoreCase("exit"))
-                break;
-            try {
-                messages = (MessageData)clientInputStream.readObject();
-                if (messages.message.equalsIgnoreCase("list"))
-                {
-                    printDeposits(messages.deposit);
-                }
-
-
-
+        try (ObjectOutputStream clientOutputStream = new ObjectOutputStream(fromserver.getOutputStream()); ObjectInputStream clientInputStream = new ObjectInputStream(fromserver.getInputStream())) {
+            
+            Scanner in = new Scanner(System.in);
+            
+            while (true) {
+                messages.setMessage(in.nextLine());
+                clientOutputStream.writeObject(messages);
+                if(messages.message.equalsIgnoreCase("exit"))
+                    break;
+                try {
+                    messages = (MessageData)clientInputStream.readObject();
+                    if (messages.message.equalsIgnoreCase("list"))
+                    {
+                        printDeposits(messages.deposit);
+                    }
+                    if (messages.message.equalsIgnoreCase("sum"))
+                    {
+                        System.out.println(messages.sum);
+                    }
+                    
+                    if (messages.message.equalsIgnoreCase("count"))
+                    {
+                        System.out.println(messages.count);
+                    }
+                    if(messages.message.startsWith("info account"))
+                    {
+                        System.out.println(messages.dep.bankName);
+                    }
+                    if(messages.message.equals("error"))
+                    {
+                        System.out.println(messages.errorMessage);
+                    }
+                    
+                    if(messages.message.equalsIgnoreCase("help"))
+                    {
+                        System.out.println(messages.errorMessage);
+                    }
+                    
                 } catch (ClassNotFoundException ex) {
-             if (false) break;              
+                    if (false) break;              
+                }
             }
         }
-        clientInputStream.close();
-        clientOutputStream.close(); 
     }
 }

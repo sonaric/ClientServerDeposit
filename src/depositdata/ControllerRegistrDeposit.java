@@ -19,29 +19,39 @@ import java.util.Iterator;
  */
 public class ControllerRegistrDeposit {
     private ArrayList<Deposit> deposits;
-    public ControllerRegistrDeposit() {
+    
+    private static volatile ControllerRegistrDeposit instance;
+    
+    private ControllerRegistrDeposit() {
        
+    }
+    
+    public static ControllerRegistrDeposit getInstance() {
+        if(instance == null)
+            synchronized (ControllerRegistrDeposit.class) {
+                if(instance == null)
+                    instance = new ControllerRegistrDeposit();
+            }
+        return instance;
     }
     public void load(){
         
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("deposits.dat"));
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("deposits.dat"))) {
             deposits = (ArrayList<Deposit>)in.readObject();
-            in.close();
         } catch (IOException | ClassNotFoundException ex) {
            deposits = new ArrayList<>();
         }
         
     }
-    public ArrayList<Deposit> getAllDeposit() {
+    public synchronized ArrayList<Deposit> getAllDeposit() {
         return deposits;
     }
     
-    public void add(Deposit data) {
+    public synchronized void add(Deposit data) {
         deposits.add(data);
     }
     
-    public double totalSum() {
+    public synchronized double totalSum() {
         double sum = 0;
         Iterator<Deposit> iter = deposits.iterator();
         while (iter.hasNext()) {
@@ -51,11 +61,11 @@ public class ControllerRegistrDeposit {
         return sum;
     }
     
-    public int countDeposit() {
+    public synchronized int countDeposit() {
         return deposits.size();
     }
     
-    public Deposit getAccountId(long accountId) {
+    public synchronized Deposit getAccountId(long accountId) {
         Iterator<Deposit> iter = deposits.iterator();
         Deposit resDep = null;
         while (iter.hasNext()) {
@@ -68,7 +78,7 @@ public class ControllerRegistrDeposit {
         return resDep;
     }
     
-    public ArrayList<Deposit> getDepositByDepositor(String depositor){
+    public synchronized ArrayList<Deposit> getDepositByDepositor(String depositor){
         Iterator<Deposit> iter = deposits.iterator();
         ArrayList<Deposit> temp_list = new ArrayList<>();
 
@@ -81,7 +91,7 @@ public class ControllerRegistrDeposit {
         return temp_list;
     }
     
-    public ArrayList<Deposit> getDepositByBank(String bankName){
+    public synchronized ArrayList<Deposit> getDepositByBank(String bankName){
         Iterator<Deposit> iter = deposits.iterator();
         ArrayList<Deposit> temp_list = new ArrayList<>();
 
@@ -94,7 +104,7 @@ public class ControllerRegistrDeposit {
         return temp_list;
     }
     
-    public ArrayList<Deposit> getDepositsByType(String type){
+    public synchronized ArrayList<Deposit> getDepositsByType(String type){
         Iterator<Deposit> iter = deposits.iterator();
         ArrayList<Deposit> temp_list = new ArrayList<>();
 
@@ -107,7 +117,7 @@ public class ControllerRegistrDeposit {
         return temp_list;
     }
     
-    public boolean delete(long accout_id) {
+    public synchronized boolean delete(long accout_id) {
         int flag = 200;
         Iterator<Deposit> iter = deposits.iterator();
         while (iter.hasNext()) {
@@ -124,10 +134,8 @@ public class ControllerRegistrDeposit {
     }
     
     public void save() {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("deposits.dat"));
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("deposits.dat"))) {
             out.writeObject(deposits);
-            out.close();
         } catch (IOException ex) {
             System.out.println("Save is fail...");
         }

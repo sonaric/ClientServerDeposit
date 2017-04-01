@@ -3,13 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositclient/DepositClient.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositdata/MessageData.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositserver/ClientThread.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositserver/DepositServer.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositdata/ControllerRegistrDeposit.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/src/depositdata/Deposit.java</file>
-            <file>file:/C:/Users/Stanislav/Documents/NetBeansProjects/DepositServer/config.properties</file>
+            <file>file:/C:/Users/Stanislav/Documents/GitHub/ClientServerDeposit/src/depositclient/DepositClient.java</file>
+            <file>file:/C:/Users/Stanislav/Documents/GitHub/ClientServerDeposit/src/depositserver/ClientThread.java</file>
+            <file>file:/C:/Users/Stanislav/Documents/GitHub/ClientServerDeposit/src/depositserver/DepositServer.java</file>
+            <file>file:/C:/Users/Stanislav/Documents/GitHub/ClientServerDeposit/src/depositdata/MessageData.java</file>
+            <file>file:/C:/Users/Stanislav/Documents/GitHub/ClientServerDeposit/src/depositdata/ControllerRegistrDeposit.java</file>
         </group>
     </open-files>
 </project-private>

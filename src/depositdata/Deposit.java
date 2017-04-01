@@ -22,6 +22,10 @@ public class Deposit implements Serializable{
     public double profitability;
     public String timeConstrain;
 
+    public Deposit() {
+    }
+
+    
     public Deposit(String bankName, String country, int depositType, String depositor, long accountId, double amountOfDeposit, double profitability, String timeConstrain) {
         this.bankName = bankName;
         this.country = country;
