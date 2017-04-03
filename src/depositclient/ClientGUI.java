@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package depositclient;
 
 /*
@@ -40,36 +35,41 @@ import javax.swing.SwingUtilities;
  *
  * @author Stanislav
  */
-public class TestGUI extends JFrame{
-    private JButton button = new JButton("Execute");
-    private JTextField input = new JTextField("", 5);
-    private JTextArea textArea = new JTextArea("", 5, 5);
-    private JLabel label = new JLabel("Command:");
+public class ClientGUI extends JFrame{
+    private final JButton button = new JButton("Execute");
+    private final JTextField input = new JTextField("", 5);
+    private final JTextArea textArea = new JTextArea("", 5, 5);
+    private final JLabel label = new JLabel("Command:");
     ObjectOutputStream clientOutputStream = null;
     ObjectInputStream clientInputStream = null;
-    MessageData messages;
+    MessageData messages = new MessageData();
 
     public void initGUI(){
         this.setBounds(100,100,450,450);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        /*this.addWindowListener(new WindowAdapter() {
-            public void windowsClosing(WindowEvent e){
-                    System.exit(0);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                super.windowClosing(we);
+                messages.setMessage("exit");
             }
-        });*/
+        });
+        textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
-        textArea.setBackground(new Color(36, 36, 36));
-        textArea.setForeground(Color.yellow);
+        textArea.setBackground(new Color(84,143,30));
+        textArea.setForeground(Color.white);
         textArea.repaint();
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
         p.add(textArea);
         JPanel p2 = new JPanel();
+        p2.setBackground(Color.white);
         p2.setLayout((new BoxLayout(p2, BoxLayout.LINE_AXIS)));
         p2.add(javax.swing.Box.createRigidArea(new Dimension(10,0)));
         p2.add(label);
         p2.add(javax.swing.Box.createRigidArea(new Dimension(10,0)));
         p2.add(input);
+        label.setForeground(new Color(84,143,30));
         input.addActionListener(new ButtonEventListener());
         
         button.addActionListener(new ButtonEventListener());
@@ -80,7 +80,7 @@ public class TestGUI extends JFrame{
         this.setVisible(true);
 
     }
-    public TestGUI() {
+    public ClientGUI() {
         super("Deposit client");
     }
     
@@ -89,6 +89,8 @@ public class TestGUI extends JFrame{
             Socket fromServer = new Socket("127.0.0.1", 1234);
             clientOutputStream = new ObjectOutputStream(fromServer.getOutputStream());
             clientInputStream = new ObjectInputStream(fromServer.getInputStream());
+            textArea.append("Connected!\n");
+            textArea.append("Input \"help\" for view list of command.");
         } catch (IOException ex) {
             textArea.append("Error connection!\n");
         }
@@ -98,28 +100,24 @@ public class TestGUI extends JFrame{
         if(dep.isEmpty()){
             textArea.append("Deposits is empty!\n");
         }else{
+            textArea.append("List of deposits:\n");
         Iterator<Deposit> iter = dep.iterator();
         while (iter.hasNext()) {
             Deposit dp = iter.next();
-            textArea.append(dp.bankName+" ");
-            textArea.append(dp.country+" ");
-            textArea.append(dp.depositType+" ");
-            textArea.append(dp.depositor+" ");
-            textArea.append(dp.accountId+" ");
-            textArea.append(dp.amountOfDeposit+" ");
-            textArea.append(dp.profitability+" ");
-            textArea.append(dp.timeConstrain+"\n");
+            textArea.append(dp.accountId+" | ");
+            textArea.append(dp.bankName+" | ");
+            textArea.append(dp.depositType+" \n");
         } }
     };
     
     void printAccount(Deposit dp){
-        textArea.append(dp.bankName+" ");
-        textArea.append(dp.country+" ");
-        textArea.append(dp.depositType+" ");
-        textArea.append(dp.depositor+" ");
-        textArea.append(dp.accountId+" ");
-        textArea.append(dp.amountOfDeposit+" ");
-        textArea.append(dp.profitability+" ");
+        textArea.append(dp.bankName+" | ");
+        textArea.append(dp.country+" | ");
+        textArea.append(dp.depositType+" | ");
+        textArea.append(dp.depositor+" | ");
+        textArea.append(dp.accountId+" | ");
+        textArea.append(dp.amountOfDeposit+" | ");
+        textArea.append(dp.profitability+" | ");
         textArea.append(dp.timeConstrain+"\n");
     }
     
@@ -151,6 +149,10 @@ public class TestGUI extends JFrame{
             {
                 printAccount(messages.dep);
             }
+            if(messages.message.startsWith("info depositor"))
+            {
+                printAccount(messages.dep);
+            }
             if(messages.message.equals("error"))
             {
                 textArea.append(messages.errorMessage+"\n");
@@ -160,7 +162,32 @@ public class TestGUI extends JFrame{
             {
                 textArea.append(messages.errorMessage+"\n");
             }
-        
+            if(messages.message.startsWith("info deposit"))
+            {
+                printDeposit(messages.deposit);
+            }
+            
+            if(messages.message.startsWith("show type"))
+            {
+                printDeposit(messages.deposit);
+            }
+            if(messages.message.startsWith("show bank"))
+            {
+                printDeposit(messages.deposit);
+            }
+            if(messages.message.startsWith("add"))
+            {
+                textArea.append(messages.errorMessage);
+            }
+            if(messages.message.startsWith("delete"))
+            {
+                textArea.append(messages.errorMessage);
+            }
+            input.setText("");
+            if(messages.message.equalsIgnoreCase("exit"))
+            {
+                System.exit(0);
+            }
         } catch (IOException | ClassNotFoundException ex) {
             textArea.append(ex.getMessage());
         }
@@ -170,7 +197,7 @@ public class TestGUI extends JFrame{
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            TestGUI app = new TestGUI();
+            ClientGUI app = new ClientGUI();
             app.initGUI();
             app.Connection();
         });

@@ -117,20 +117,15 @@ public class ControllerRegistrDeposit {
         return temp_list;
     }
     
-    public synchronized boolean delete(long accout_id) {
-        int flag = 200;
+    public synchronized void delete(long accout_id) {
+
         Iterator<Deposit> iter = deposits.iterator();
         while (iter.hasNext()) {
             Deposit dep = iter.next();
             if (dep.accountId == accout_id) {
                 iter.remove();
-                flag = 0;
             }
         }
-        if (flag == 0)
-            return true;
-        else
-            return false;
     }
     
     public void save() {
