@@ -23,7 +23,7 @@ public class DepositServer {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         ControllerRegistrDeposit crd = ControllerRegistrDeposit.getInstance();
         crd.load();
-        ServerSocket socketConnection = new ServerSocket(DepositServerConfig.PORT);
+        ServerSocket socketConnection = new ServerSocket(1234);
         
         System.out.println("Server waiting");
         while(true){

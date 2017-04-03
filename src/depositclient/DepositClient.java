@@ -75,7 +75,7 @@ public class DepositClient {
                     }
                     
                 } catch (ClassNotFoundException ex) {
-                    if (false) break;              
+                                
                 }
             }
         }
